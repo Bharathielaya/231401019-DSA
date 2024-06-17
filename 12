@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define TABLE_SIZE 10
+#define LOAD_FACTOR_THRESHOLD 0.7
+// Open Addressing - Linear Probing
+void insertLinearProbing(int table[], int size, int key) {
+    int hash = key % size;
+    int originalHash = hash;
+    while (table[hash] != -1) {
+        hash = (hash + 1) % size;
+        if (hash == originalHash) {
+            printf("Table is full!\n");
+            return;
+        }
+    }
+    table[hash] = key;
+}
+int searchLinearProbing(int table[], int size, int key) {
+    int hash = key % size;
+    int originalHash = hash;
+    while (table[hash] != -1) {
+        if (table[hash] == key)
+            return hash;
+        hash = (hash + 1) % size;
+        if (hash == originalHash)
+            break;
+    }
+    return -1;
+}
+
+// Closed Addressing (Chaining)
+typedef struct Node {
+    int key;
+    struct Node* next;
+} Node;
+
+void insertChaining(Node* table[], int size, int key) {
+    int hash = key % size;
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->key = key;
+    newNode->next = table[hash];
+    table[hash] = newNode;
+}
+
